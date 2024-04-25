@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+</head>
+
+<body>
+    <h1>Welcome, {{ session['username'] }} (Admin)</h1>
+    <!-- Add New Category Form -->
+    <form action="{{ url_for('add_category') }}" method="POST">
+        <label for="category_name">New Category Name:</label><br>
+        <input type="text" id="category_name" name="category_name"><br>
+        <button type="submit">Add Category</button>
+    </form>
+    <!-- Add form for removing products -->
+    <!-- Add New Product Form -->
+    <form action="{{ url_for('add_product_route') }}" method="POST">
+
+        <label for="product_name">Product Name:</label><br>
+        <input type="text" id="product_name" name="product_name" required><br>
+
+        <label for="category">Category:</label><br>
+        <select id="category" name="category" required>
+            {% for category in categories %}
+            <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="quantity">Quantity:</label><br>
+        <input type="number" id="quantity" name="quantity" required><br>
+
+        <label for="buying_price">Buying Price:</label><br>
+        <input type="number" id="buying_price" name="buying_price" step="0.01" required><br>
+
+        <label for="selling_price">Selling Price:</label><br>
+        <input type="number" id="selling_price" name="selling_price" step="0.01" required><br>
+
+        <button type="submit">Add Product</button>
+    </form>
+
+    <!-- Display Products -->
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Buying Price</th>
+                <th>Selling Price</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.category }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>{{ product.buying_price }}</td>
+                <td>{{ product.selling_price }}</td>
+                <td>
+                    <a href="{{ url_for('edit_product', product_id=product.id) }}">Edit</a> |
+                    <a href="{{ url_for('delete_product', product_id=product.id) }}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <form action="{{ url_for('remove_product') }}" method="POST">
+        <label for="product_id">Product ID:</label><br>
+        <input type="number" id="product_id" name="product_id" required><br>
+        <button type="submit">Remove Product</button>
+    </form>
+
+    <h2>Sold Products</h2>
+
+    <!-- Display sales data -->
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Sale Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sale in sales_data %}
+            <tr>
+                <td>{{ sale.product_name }}</td>
+                <td>{{ sale.quantity }}</td>
+                <td>{{ sale.price }}</td>
+                <td>{{ sale.total }}</td>
+                <td>{{ sale.sale_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li><a href="#">Manage Products</a></li>
+        <li><a href="#">View Sales Reports</a></li>
+        <!-- Add more links or features as needed -->
+    </ul>
+    <a href="{{ url_for('logout') }}">Logout</a>
+</body>
+
+</html>
